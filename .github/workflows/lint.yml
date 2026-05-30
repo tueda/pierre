@@ -1,0 +1,58 @@
+name: Lint
+
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: '0 0 1 * *' # monthly
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  gitlint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      # for pip cache
+      - name: Create requirements.txt
+        run: echo 'gitlint' >requirements.txt
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install gitlint
+
+      - name: Run gitlint (pull request)
+        if: github.event_name == 'pull_request'
+        run: gitlint --commits "${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }}"
+
+      - name: Run gitlint (push)
+        if: github.event_name == 'push' && !github.event.created && !github.event.deleted
+        run: gitlint --commits "${{ github.event.before }}..${{ github.sha }}"
+
+      - name: Run gitlint (created ref)
+        if: github.event_name == 'push' && github.event.created
+        run: gitlint --commit "${{ github.sha }}"
+
+      - name: Run gitlint (current commit)
+        if: github.event_name != 'pull_request' && github.event_name != 'push'
+        run: gitlint
+
+  pre-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v6
+
+      - name: Run pre-commit
+        uses: tox-dev/action-pre-commit-uv@v1

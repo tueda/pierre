@@ -1,0 +1,112 @@
+name: Release
+
+on:
+  push:
+    paths-ignore:
+      - .pre-commit-config.yaml
+  pull_request:
+    paths-ignore:
+      - .pre-commit-config.yaml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  generate-release-notes:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.release-notes.outputs.version }}
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v6
+
+      - name: Install parse-changelog
+        uses: taiki-e/install-action@parse-changelog
+
+      - name: Generate release notes
+        id: release-notes
+        run: |
+          ./scripts/generate-release-notes.sh >release-notes.md
+          version=$(./scripts/generate-release-notes.sh -v)
+          echo "$version"
+
+          echo "version=$version" >>"$GITHUB_OUTPUT"
+
+      - name: Preview release notes
+        run: cat release-notes.md
+
+      - name: Upload release notes
+        uses: actions/upload-artifact@v7
+        with:
+          name: release-notes
+          path: release-notes.md
+          if-no-files-found: error
+
+  release:
+    if: github.ref_type == 'tag' && startsWith(github.ref_name, 'v')
+    needs:
+      - generate-release-notes
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check the tag  # vMAJOR.MINOR.PATCH with optional PEP 440 suffixes
+        id: check-tag
+        run: |
+          tag='${{ github.ref_name }}'
+
+          if [[ ! "$tag" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(a[0-9]+|b[0-9]+|rc[0-9]+)?(\.post[0-9]+)?(\.dev[0-9]+)?$ ]]; then
+            echo "error: invalid release tag: $tag" >&2
+            exit 1
+          fi
+
+          echo "version=${tag#v}" >>"$GITHUB_OUTPUT"
+
+          if [[ "$tag" =~ (a|b|rc)[0-9]+|\.dev[0-9]+ ]]; then
+            echo 'pre-release=true' >>"$GITHUB_OUTPUT"
+          else
+            echo 'pre-release=false' >>"$GITHUB_OUTPUT"
+          fi
+
+          if [[ "$tag" =~ \.post[0-9]+ ]]; then
+            echo 'post-release=true' >>"$GITHUB_OUTPUT"
+          else
+            echo 'post-release=false' >>"$GITHUB_OUTPUT"
+          fi
+
+      - name: Check release notes version
+        if: steps.check-tag.outputs.post-release != 'true'
+        run: |
+          tag='${{ github.ref_name }}'
+          notes_version='${{ needs.generate-release-notes.outputs.version }}'
+          expected_tag="v$notes_version"
+
+          if [[ "$tag" != "$expected_tag" ]]; then
+            echo "error: release notes version does not match tag" >&2
+            echo "  release notes version: $notes_version" >&2
+            echo "  expected tag:          $expected_tag" >&2
+            echo "  actual tag:            $tag" >&2
+            exit 1
+          fi
+
+      - name: Download release notes
+        if: steps.check-tag.outputs.post-release != 'true'
+        uses: actions/download-artifact@v8
+        with:
+          name: release-notes
+
+      - name: Create a release (non-post-release)
+        if: steps.check-tag.outputs.post-release != 'true'
+        uses: softprops/action-gh-release@v3
+        with:
+          name: ${{ steps.check-tag.outputs.version }}
+          prerelease: ${{ steps.check-tag.outputs.pre-release }}
+          body_path: release-notes.md
+
+      - name: Create a release (post-release)
+        if: steps.check-tag.outputs.post-release == 'true'
+        uses: softprops/action-gh-release@v3
+        with:
+          name: ${{ steps.check-tag.outputs.version }}
+          prerelease: ${{ steps.check-tag.outputs.pre-release }}

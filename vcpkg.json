@@ -1,0 +1,33 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
+  "builtin-baseline": "56bb2411609227288b70117ead2c47585ba07713",
+  "dependencies": ["ctre", "doctest", "ms-gsl", "quill"],
+  "features": {
+    "flint": {
+      "description": "Add FLINT as a vcpkg dependency",
+      "dependencies": ["flint"]
+    }
+  },
+  "overrides": [
+    {
+      "name": "ctre",
+      "version": "3.10.0"
+    },
+    {
+      "name": "doctest",
+      "version": "2.5.2"
+    },
+    {
+      "name": "flint",
+      "version": "3.5.0"
+    },
+    {
+      "name": "ms-gsl",
+      "version": "4.2.1"
+    },
+    {
+      "name": "quill",
+      "version": "11.1.0"
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+default_install_hook_types: [pre-commit, commit-msg]
+
+repos:
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+    -   id: check-added-large-files
+    -   id: check-case-conflict
+    -   id: check-executables-have-shebangs
+    -   id: check-illegal-windows-names
+    -   id: check-json
+    -   id: check-merge-conflict
+    -   id: check-shebang-scripts-are-executable
+    -   id: check-symlinks
+    -   id: check-vcs-permalinks
+    -   id: check-yaml
+        args: [--allow-multiple-documents]
+    -   id: destroyed-symlinks
+    -   id: detect-private-key
+    -   id: end-of-file-fixer
+    -   id: fix-byte-order-marker
+    -   id: mixed-line-ending
+    -   id: trailing-whitespace
+
+-   repo: https://github.com/pre-commit/mirrors-clang-format
+    rev: v22.1.5
+    hooks:
+    -   id: clang-format
+        types: [c++]
+
+-   repo: https://github.com/cpplint/cpplint
+    rev: 2.0.2
+    hooks:
+    -   id: cpplint
+
+-   repo: https://github.com/cheshirekow/cmake-format-precommit
+    rev: v0.6.13
+    hooks:
+    -   id: cmake-format
+        additional_dependencies: [pyyaml==6.0.3]
+    -   id: cmake-lint
+        additional_dependencies: [pyyaml==6.0.3]
+
+-   repo: https://github.com/biomejs/pre-commit
+    rev: v2.4.16
+    hooks:
+    -   id: biome-format
+        types: [json]
+
+-   repo: https://github.com/scop/pre-commit-shfmt
+    rev: v3.13.1-1
+    hooks:
+    -   id: shfmt
+
+-   repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.11.0.1
+    hooks:
+    -   id: shellcheck
+        args: [-x]
+
+-   repo: https://github.com/python-jsonschema/check-jsonschema
+    rev: 0.37.2
+    hooks:
+    -   id: check-github-workflows
+
+-   repo: https://github.com/rhysd/actionlint
+    rev: v1.7.12
+    hooks:
+    -   id: actionlint
+
+-   repo: https://github.com/editorconfig-checker/editorconfig-checker.python
+    rev: 3.6.1
+    hooks:
+    -   id: editorconfig-checker
+        args: [-disable-indent-size]
+
+-   repo: https://github.com/streetsidesoftware/cspell-cli
+    rev: v10.0.0
+    hooks:
+    -   id: cspell
+        exclude: ^\.cspell\.json$
+    -   id: cspell
+        name: check commit message spelling
+        args:
+          - --no-must-find-files
+          - --no-progress
+          - --no-summary
+          - --files
+          - .git/COMMIT_EDITMSG
+        stages: [commit-msg]
+
+-   repo: https://github.com/jorisroovers/gitlint
+    rev: v0.19.1
+    hooks:
+    -   id: gitlint

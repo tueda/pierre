@@ -1,0 +1,18 @@
+---
+BasedOnStyle: Google
+---
+Language: Cpp
+Standard: Cpp11
+
+DerivePointerAlignment: false
+IncludeCategories:
+  - Regex: '<(flint)/'
+    Priority: 3
+  - Regex: '<(ctre|gsl|quill)[/\.]'
+    Priority: 4
+  - Regex: '^<.*\.h>$'
+    Priority: 1
+  - Regex: '^<.*$'
+    Priority: 2
+  - Regex: '.*'
+    Priority: 5
