@@ -27,6 +27,9 @@ sudo DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y \
 git clone https://github.com/tueda/pierre.git
 cd pierre
 
+# Check out the latest version tag.
+git checkout "$(git tag --sort=-v:refname | head -n 1)"
+
 # Set up vcpkg to manage dependencies.
 git clone https://github.com/microsoft/vcpkg.git
 ./vcpkg/bootstrap-vcpkg.sh
