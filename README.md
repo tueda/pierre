@@ -1,5 +1,7 @@
 # Pierre
 
+[![Test](https://github.com/tueda/pierre/actions/workflows/test.yml/badge.svg)](https://github.com/tueda/pierre/actions?query=branch%3Amain)
+
 Built on [FLINT](https://flintlib.org/).
 
 ## Installation
