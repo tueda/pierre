@@ -29,7 +29,7 @@ jobs:
         run: |
           ./scripts/generate-release-notes.sh >release-notes.md
           version=$(./scripts/generate-release-notes.sh -v)
-          echo "$version"
+          echo "$version"  # Log the version
 
           echo "version=$version" >>"$GITHUB_OUTPUT"
 

@@ -40,7 +40,6 @@ jobs:
         run: brew install autoconf-archive automake libtool
 
       - name: Cache vcpkg binary cache
-        id: cache-vcpkg
         uses: actions/cache@v5
         with:
           path: ~/.cache/vcpkg/archives
@@ -90,7 +89,6 @@ jobs:
           version: ${{ matrix.os }}-1
 
       - name: Cache vcpkg binary cache
-        id: cache-vcpkg
         uses: actions/cache@v5
         with:
           path: ~/.cache/vcpkg/archives
@@ -137,7 +135,6 @@ jobs:
         run: brew install autoconf-archive automake ginac libtool meson yaml-cpp
 
       - name: Cache vcpkg binary cache
-        id: cache-vcpkg
         uses: actions/cache@v5
         with:
           path: ~/.cache/vcpkg/archives
@@ -160,14 +157,17 @@ jobs:
 
       - name: Build Kira
         run: |
-          git clone https://gitlab.com/kira-pyred/kira.git -b ${{ matrix.kira-version }}
+          git clone https://gitlab.com/kira-pyred/kira.git -b '${{ matrix.kira-version }}'
           git -C kira fetch https://gitlab.com/tueda/kira.git 70289ebd5b8e3ed642d430f527b475bc567a462f
+          GIT_COMMITTER_NAME='github-actions[bot]' \
+            GIT_COMMITTER_EMAIL='41898282+github-actions[bot]@users.noreply.github.com' \
+            git -C kira cherry-pick FETCH_HEAD
           meson setup -Db_ndebug=true -Dfirefly=false kira/build kira
           meson compile -C kira/build
 
       - name: Test
         run: |
-          FERMATPATH="${{ github.workspace }}/build/release/src/pierre" \
+          FERMATPATH='${{ github.workspace }}/build/release/src/pierre' \
             meson test -C kira/build --timeout-multiplier 2 --print-errorlogs
 
       - name: Print test log

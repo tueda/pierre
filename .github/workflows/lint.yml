@@ -33,15 +33,23 @@ jobs:
 
       - name: Run gitlint (pull request)
         if: github.event_name == 'pull_request'
-        run: gitlint --commits "${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }}"
+        run: gitlint --commits '${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }}'
 
       - name: Run gitlint (push)
         if: github.event_name == 'push' && !github.event.created && !github.event.deleted
-        run: gitlint --commits "${{ github.event.before }}..${{ github.sha }}"
+        run: |
+          before='${{ github.event.before }}'
+          after='${{ github.sha }}'
+          if git cat-file -e "$before^{commit}" 2>/dev/null; then
+            gitlint --commits "$before..$after"
+          else
+            echo "commit before this push is not available locally: $before"
+            gitlint --commit "$after"
+          fi
 
       - name: Run gitlint (created ref)
         if: github.event_name == 'push' && github.event.created
-        run: gitlint --commit "${{ github.sha }}"
+        run: gitlint --commit '${{ github.sha }}'
 
       - name: Run gitlint (current commit)
         if: github.event_name != 'pull_request' && github.event_name != 'push'
