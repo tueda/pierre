@@ -20,6 +20,8 @@ jobs:
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v6
+        with:
+          persist-credentials: false
 
       - name: Install parse-changelog
         uses: taiki-e/install-action@parse-changelog
@@ -53,9 +55,10 @@ jobs:
     steps:
       - name: Check the tag  # vMAJOR.MINOR.PATCH with optional PEP 440 suffixes
         id: check-tag
+        env:
+          TAG: ${{ github.ref_name }}
         run: |
-          tag='${{ github.ref_name }}'
-
+          tag=$TAG
           if [[ ! "$tag" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(a[0-9]+|b[0-9]+|rc[0-9]+)?(\.post[0-9]+)?(\.dev[0-9]+)?$ ]]; then
             echo "error: invalid release tag: $tag" >&2
             exit 1
@@ -77,9 +80,12 @@ jobs:
 
       - name: Check release notes version
         if: steps.check-tag.outputs.post-release != 'true'
+        env:
+          TAG: ${{ github.ref_name }}
+          NOTES_VERSION: ${{ needs.generate-release-notes.outputs.version }}
         run: |
-          tag='${{ github.ref_name }}'
-          notes_version='${{ needs.generate-release-notes.outputs.version }}'
+          tag=$TAG
+          notes_version=$NOTES_VERSION
           expected_tag="v$notes_version"
 
           if [[ "$tag" != "$expected_tag" ]]; then

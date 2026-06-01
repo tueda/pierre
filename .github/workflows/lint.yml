@@ -18,6 +18,7 @@ jobs:
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Create requirements.txt
         run: echo 'gitlint' >requirements.txt
@@ -44,6 +45,7 @@ jobs:
             gitlint --commits "$before..$after"
           else
             echo "commit before this push is not available locally: $before"
+            # This fallback is not complete yet because it only checks the last commit.
             gitlint --commit "$after"
           fi
 
@@ -60,6 +62,8 @@ jobs:
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v6
+        with:
+          persist-credentials: false
 
       - name: Run pre-commit
         uses: tox-dev/action-pre-commit-uv@v1

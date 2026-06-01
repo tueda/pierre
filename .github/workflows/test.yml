@@ -27,6 +27,8 @@ jobs:
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v6
+        with:
+          persist-credentials: false
 
       - name: Install build dependencies (Linux)
         if: runner.os == 'Linux'
@@ -73,6 +75,8 @@ jobs:
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v6
+        with:
+          persist-credentials: false
 
       - name: Add LLVM APT repository
         run: |
@@ -122,6 +126,8 @@ jobs:
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v6
+        with:
+          persist-credentials: false
 
       - name: Install build dependencies (Linux)
         if: runner.os == 'Linux'
