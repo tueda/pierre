@@ -34,6 +34,19 @@ add_subdirectory(src)
 
 include(CTest)
 if(BUILD_TESTING)
+  add_custom_target(
+    build-tests
+    COMMENT "Building tests"
+    VERBATIM)
+
+  add_custom_target(
+    check
+    COMMAND "${CMAKE_CTEST_COMMAND}" -C "$<CONFIG>" --output-on-failure
+            --parallel
+    DEPENDS build-tests
+    COMMENT "Running tests"
+    VERBATIM)
+
   if(ENABLE_CLANG_TIDY)
     add_subdirectory(tests)
   else()

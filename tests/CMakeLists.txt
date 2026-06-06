@@ -1,15 +1,3 @@
-add_custom_target(
-  build-tests
-  COMMENT "Building tests"
-  VERBATIM)
-
-add_custom_target(
-  check
-  COMMAND "${CMAKE_CTEST_COMMAND}" -C $<CONFIG> --output-on-failure
-  DEPENDS build-tests
-  COMMENT "Running tests"
-  VERBATIM)
-
 find_package(doctest CONFIG REQUIRED)
 
 function(add_cpp_test name)
