@@ -12,6 +12,7 @@
     "-DVCPKG_INSTALLED_DIR",
     "-fsanitize",
     "cache-apt-pkgs-action",
+    "choco",
     "ctest",
     "ctre",
     "fmpz_mpoly_ctx_clear",
