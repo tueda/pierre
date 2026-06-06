@@ -6,10 +6,7 @@
   "words": [
     "--dearmor",
     "-DCLANG_TIDY_BIN",
-    "-DCMAKE_BUILD_TYPE",
-    "-DCMAKE_TOOLCHAIN_FILE",
     "-Dfirefly",
-    "-DVCPKG_INSTALLED_DIR",
     "-fsanitize",
     "cache-apt-pkgs-action",
     "choco",
