@@ -1,0 +1,42 @@
+name: Set up vcpkg
+description: Set up vcpkg with binary caching.
+
+runs:
+  using: composite
+  steps:
+    - name: Generate vcpkg cache configurations
+      id: vcpkg-cache-config
+      shell: bash
+      run: |
+        case "$RUNNER_OS" in
+          Linux|macOS)
+            echo 'cache-path=~/.cache/vcpkg/archives' >>"$GITHUB_OUTPUT"
+            ;;
+          Windows)
+            echo 'cache-path=~/AppData/Local/vcpkg/archives' >>"$GITHUB_OUTPUT"
+            ;;
+          *)
+            echo "Error: unsupported OS: $RUNNER_OS" >&2
+            exit 1
+            ;;
+        esac
+        echo "cache-prefix=vcpkg-${ImageOS:-$RUNNER_OS}-$RUNNER_ARCH" >>"$GITHUB_OUTPUT"
+
+    - name: Cache vcpkg binary cache
+      uses: actions/cache@v5
+      with:
+        path: ${{ steps.vcpkg-cache-config.outputs.cache-path }}
+        key: ${{ steps.vcpkg-cache-config.outputs.cache-prefix }}-${{ hashFiles('**/vcpkg.json') }}
+        restore-keys: ${{ steps.vcpkg-cache-config.outputs.cache-prefix }}-
+
+    - name: Clone vcpkg
+      shell: bash
+      run: git clone https://github.com/microsoft/vcpkg.git
+
+    - name: Bootstrap vcpkg
+      shell: bash
+      run: ./vcpkg/bootstrap-vcpkg${{ runner.os == 'Windows' && '.bat' || '.sh' }}
+
+    - name: Install dependencies in manifest mode
+      shell: bash
+      run: ./vcpkg/vcpkg install
