@@ -2,9 +2,8 @@
   "version": "0.2",
   "language": "en",
   "allowCompoundWords": true,
-  "dictionaries": ["cpp"],
+  "dictionaries": ["bash", "cpp"],
   "words": [
-    "--dearmor",
     "-DCLANG_TIDY_BIN",
     "-Dfirefly",
     "-fsanitize",
@@ -31,7 +30,6 @@
     "NOLINTNEXTLINE",
     "noparent",
     "pyyaml",
-    "shfmt",
     "taiki-e",
     "topo_order",
     "tueda",
