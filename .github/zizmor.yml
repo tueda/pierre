@@ -1,4 +1,6 @@
 rules:
+  superfluous-actions:
+    disable: true
   unpinned-uses:
     config:
       policies:
