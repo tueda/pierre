@@ -19,7 +19,7 @@ jobs:
       version: ${{ steps.release-notes.outputs.version }}
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v6.0.3
         with:
           persist-credentials: false
 
