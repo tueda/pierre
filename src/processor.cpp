@@ -39,7 +39,7 @@ std::optional<std::string> try_normalize_powers(Processor& processor,
            "|"
            // case 3: x ^ - 3 --> (1/x)^3
            R"(\b((?:[A-Za-z][0-9A-Z_a-z]*|[0-9]+))[ \t]*)"
-           R"(\^[ \t]*-[ \t]*([0-9]+)*)"
+           R"(\^[ \t]*-[ \t]*([0-9]+))"
            "|"
            // case 4: x ^ ( - 4 / 2 ) --> (1/x)^2
            R"(\b((?:[A-Za-z][0-9A-Z_a-z]*|[0-9]+))[ \t]*)"
