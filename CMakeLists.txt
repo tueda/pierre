@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.15)
 
-set(PROJECT_FULL_VERSION "0.1.1")
+set(PROJECT_FULL_VERSION "0.1.2-dev")
 
 string(REGEX MATCH "^[0-9]+\\.[0-9]+\\.[0-9]+" BASE_VERSION
              "${PROJECT_FULL_VERSION}")
