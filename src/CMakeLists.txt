@@ -9,6 +9,9 @@ configure_file("${CMAKE_CURRENT_SOURCE_DIR}/version.h.in"
 
 add_library(${PROJECT_NAME}_impl cli.cpp env.cpp logger.cpp processor.cpp)
 target_compile_features(${PROJECT_NAME}_impl PUBLIC cxx_std_20)
+if(MSVC)
+  target_compile_options(${PROJECT_NAME}_impl PRIVATE /templateDepth:2048)
+endif()
 target_include_directories(
   ${PROJECT_NAME}_impl
   PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}"
