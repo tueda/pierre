@@ -36,6 +36,7 @@
     "pyyaml",
     "shfmt",
     "taiki-e",
+    "taplo",
     "topo_order",
     "tueda",
     "Ueda",

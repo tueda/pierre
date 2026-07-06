@@ -26,7 +26,3 @@ trim_trailing_whitespace = false
 [{.clang-format,.clang-tidy}]
 indent_size = 2
 indent_style = space
-
-[{.cliff.toml,.pre-commit-config.yaml}]
-indent_size = 4
-indent_style = space

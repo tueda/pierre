@@ -53,7 +53,7 @@ jobs:
       contents: write
     runs-on: ubuntu-latest
     steps:
-      - name: Check the tag  # vMAJOR.MINOR.PATCH with optional PEP 440 suffixes
+      - name: Check the tag # vMAJOR.MINOR.PATCH with optional PEP 440 suffixes
         id: check-tag
         env:
           TAG: ${{ github.ref_name }}
