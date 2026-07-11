@@ -43,7 +43,7 @@ repos:
         additional_dependencies: [pyyaml==6.0.3]
 
   - repo: https://github.com/biomejs/pre-commit
-    rev: v2.5.1
+    rev: v2.5.2
     hooks:
       - id: biome-format
         types: [json]
