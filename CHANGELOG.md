@@ -1,6 +1,16 @@
 # Changelog
 
 
+<a name="0.1.2"></a>
+
+## [0.1.2] (2026-08-08)
+
+### Dependencies
+
+- [`doctest`](https://github.com/doctest/doctest): `2.5.2` → `2.5.3` ([c318a8b](https://github.com/tueda/pierre/commit/c318a8ba84495abbbe42cae24138b7f95a8223b4))
+- [`flint`](https://github.com/flintlib/flint): `3.5.0` → `3.6.0` ([c318a8b](https://github.com/tueda/pierre/commit/c318a8ba84495abbbe42cae24138b7f95a8223b4))
+
+
 <a name="0.1.1"></a>
 
 ## [0.1.1] (2026-07-06)
@@ -24,5 +34,6 @@
 - Initial public release.
 
 
+[0.1.2]: https://github.com/tueda/pierre/compare/v0.1.1..v0.1.2
 [0.1.1]: https://github.com/tueda/pierre/compare/v0.1.0..v0.1.1
 [0.1.0]: https://github.com/tueda/pierre/tree/v0.1.0
