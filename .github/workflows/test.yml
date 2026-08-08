@@ -45,6 +45,11 @@ jobs:
         if: runner.os == 'Windows'
         run: choco install pkgconfiglite
 
+      - name: Set up CMake
+        uses: jwlawson/actions-setup-cmake@v2
+        with:
+          cmake-version: '4.3.x'
+
       - name: Cache vcpkg binary cache
         uses: actions/cache@v6
         with:
@@ -96,6 +101,11 @@ jobs:
           packages: autoconf-archive clang-tidy-22
           version: ${{ matrix.os }}-1
 
+      - name: Set up CMake
+        uses: jwlawson/actions-setup-cmake@v2
+        with:
+          cmake-version: '4.3.x'
+
       - name: Cache vcpkg binary cache
         uses: actions/cache@v6
         with:
@@ -143,6 +153,11 @@ jobs:
       - name: Install build dependencies (macOS)
         if: runner.os == 'macOS'
         run: brew install autoconf-archive automake ginac libtool meson yaml-cpp
+
+      - name: Set up CMake
+        uses: jwlawson/actions-setup-cmake@v2
+        with:
+          cmake-version: '4.3.x'
 
       - name: Cache vcpkg binary cache
         uses: actions/cache@v6
