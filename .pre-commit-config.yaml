@@ -85,7 +85,7 @@ repos:
       - id: zizmor
 
   - repo: https://github.com/editorconfig-checker/editorconfig-checker.python
-    rev: 3.8.0
+    rev: 3.11.1
     hooks:
       - id: editorconfig-checker
         args: [-disable-indent-size]
