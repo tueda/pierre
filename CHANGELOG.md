@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.3"></a>
+
+## [0.1.3] (2026-09-25)
+
+### Fixed
+
+- Fixed the x64-windows build ([6a3d453](https://github.com/tueda/pierre/commit/6a3d453ec073addd81b95b6e30987d4928da181d)).
+
 
 <a name="0.1.2"></a>
 
@@ -34,6 +42,7 @@
 - Initial public release.
 
 
+[0.1.3]: https://github.com/tueda/pierre/compare/v0.1.2..v0.1.3
 [0.1.2]: https://github.com/tueda/pierre/compare/v0.1.1..v0.1.2
 [0.1.1]: https://github.com/tueda/pierre/compare/v0.1.0..v0.1.1
 [0.1.0]: https://github.com/tueda/pierre/tree/v0.1.0
