@@ -34,6 +34,7 @@
     "libyaml",
     "NOLINTNEXTLINE",
     "noparent",
+    "prek",
     "pyyaml",
     "shfmt",
     "taiki-e",
