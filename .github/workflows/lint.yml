@@ -65,5 +65,5 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Run pre-commit
-        uses: tox-dev/action-pre-commit-uv@v1
+      - name: Run prek
+        uses: j178/prek-action@v3.0.0
