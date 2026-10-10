@@ -49,7 +49,7 @@ repos:
         types: [json]
 
   - repo: https://github.com/tombi-toml/tombi-pre-commit
-    rev: v1.5.5
+    rev: v1.7.1
     hooks:
       - id: tombi-format
 
