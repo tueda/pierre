@@ -20,8 +20,8 @@ class Timer {
   void restart() { timer_start_time_ = std::chrono::steady_clock::now(); }
 
   void record_elapsed_time() {
-    auto end_time = std::chrono::steady_clock::now();
-    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(
+    auto const end_time = std::chrono::steady_clock::now();
+    auto const duration = std::chrono::duration_cast<std::chrono::milliseconds>(
         end_time - timer_start_time_);
     elapsed_time_ += duration;
     total_elapsed_time_ += duration;

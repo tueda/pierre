@@ -40,7 +40,7 @@ quill::Logger* cached_stderr_only_logger = nullptr;
 quill::Logger* cached_file_only_logger = nullptr;
 
 std::string MakeLogFilename() {
-  auto now = std::chrono::system_clock::now();
+  auto const now = std::chrono::system_clock::now();
   const time_t time_value = std::chrono::system_clock::to_time_t(now);
   std::tm calendar_time;
 
@@ -54,9 +54,10 @@ std::string MakeLogFilename() {
   }
 #endif
 
-  auto duration_us = std::chrono::duration_cast<std::chrono::microseconds>(
-                         now.time_since_epoch()) %
-                     std::chrono::seconds{1};
+  auto const duration_us =
+      std::chrono::duration_cast<std::chrono::microseconds>(
+          now.time_since_epoch()) %
+      std::chrono::seconds{1};
 
   constexpr int width_us = 6;
 

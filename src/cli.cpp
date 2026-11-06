@@ -76,7 +76,7 @@ struct CliSession {
   }
 };
 
-void init_logger(CliSession& cli) {
+void init_logger(CliSession const& cli) {
   const bool logfile_enabled = cli.env.GetBool("PIERRE_LOG");
   const bool debug_enabled = cli.env.GetBool("PIERRE_DEBUG");
 
@@ -217,7 +217,7 @@ bool process_ampersand_command(std::string_view command, CliSession& cli) {
     return true;
   }
   // &(J=var)
-  if (auto match =
+  if (auto const match =
           ctre::match<R"(&\s*\(\s*J\s*=\s*([A-Za-z][0-9A-Z_a-z]*)\s*\))">(
               command)) {
     const std::string_view name = match.get<1>().to_view();
@@ -226,7 +226,7 @@ bool process_ampersand_command(std::string_view command, CliSession& cli) {
     return true;
   }
   // &(J=-var)
-  if (auto match =
+  if (auto const match =
           ctre::match<R"(&\s*\(\s*J\s*=\s*-\s*([A-Za-z][0-9A-Z_a-z]*)\s*\))">(
               command)) {
     const std::string_view name = match.get<1>().to_view();
@@ -263,7 +263,7 @@ bool process_ampersand_command(std::string_view command, CliSession& cli) {
     return true;
   }
   // &(_s=i), &(_t=i)
-  if (auto match =
+  if (auto const match =
           ctre::match<R"(&\s*\(\s*(_[st])\s*=\s*([01])\s*\))">(command)) {
     const std::string_view name = match.get<1>().to_view();
     const bool value = match.get<2>().to_view() != "0";
@@ -285,22 +285,24 @@ bool process_command(std::string& line, CliSession& cli) {
   const std::size_t command_end = line.find_last_not_of(whitespace_chars) + 1;
   assert(command_begin < command_end);
 
-  auto command = string_view_from_pos(line, command_begin, command_end);
+  auto const command = string_view_from_pos(line, command_begin, command_end);
 
   switch (command.front()) {
     case '&':
       return process_ampersand_command(command, cli);
     case '@':
       // @var
-      if (auto match = ctre::match<R"(@\s*([A-Za-z][0-9A-Z_a-z]*))">(command)) {
+      if (auto const match =
+              ctre::match<R"(@\s*([A-Za-z][0-9A-Z_a-z]*))">(command)) {
         const std::string_view name = match.get<1>().to_view();
         cli.processor.ClearSubstitution(name);
         cli.output << "\n        0\n\n";
         return true;
       }
       // @(var)
-      if (auto match = ctre::match<R"(@\s*\(\s*([A-Za-z][0-9A-Z_a-z]*)\s*\))">(
-              command)) {
+      if (auto const match =
+              ctre::match<R"(@\s*\(\s*([A-Za-z][0-9A-Z_a-z]*)\s*\))">(
+                  command)) {
         const std::string_view name = match.get<1>().to_view();
         cli.processor.ClearSubstitution(name);
         cli.output << "\n        0\n\n";
@@ -310,12 +312,12 @@ bool process_command(std::string& line, CliSession& cli) {
     default:
       // var:=rational_number
       if (auto subst = find_substitution(line)) {
-        auto var_begin = std::get<0>(subst.value());
-        auto var_end = std::get<1>(subst.value());
-        auto value_begin = std::get<2>(subst.value());
-        auto value_end = std::get<3>(subst.value());
-        auto var = string_view_from_pos(line, var_begin, var_end);
-        auto value = string_view_from_pos(line, value_begin, value_end);
+        auto const var_begin = std::get<0>(subst.value());
+        auto const var_end = std::get<1>(subst.value());
+        auto const value_begin = std::get<2>(subst.value());
+        auto const value_end = std::get<3>(subst.value());
+        auto const var = string_view_from_pos(line, var_begin, var_end);
+        auto const value = string_view_from_pos(line, value_begin, value_end);
 
         if (std::ranges::any_of(value, [](char character) {
               return is_identifier_start(character);
@@ -328,7 +330,7 @@ bool process_command(std::string& line, CliSession& cli) {
         if (value_end < line.size()) {
           line[value_end] = '\0';
         }
-        auto result = cli.processor.Evaluate(line.data() + value_begin);
+        auto const result = cli.processor.Evaluate(line.data() + value_begin);
         cli.processor.SetSubstitution(var, result.get());
         cli.output << "\n " << result.get() << "\n\n";
         return true;
@@ -337,7 +339,7 @@ bool process_command(std::string& line, CliSession& cli) {
       if (command_end < line.size()) {
         line[command_end] = '\0';
       }
-      auto result = cli.processor.Evaluate(line.data() + command_begin);
+      auto const result = cli.processor.Evaluate(line.data() + command_begin);
       LOG_DEBUG("OUT : {}", result.get());
       cli.output << "\n " << result.get() << "\n\n";
       return true;
@@ -364,11 +366,13 @@ int RunCli(int argc, char* argv[]) {
 
 int RunCli(std::span<char* const> args, std::istream& input,
            std::ostream& output, std::ostream& error, const Environment& env) {
-  CliSession cli{.args = args,
-                 .input = input,
-                 .output = output,
-                 .error = error,
-                 .env = env};
+  CliSession cli{
+      .args = args,
+      .input = input,
+      .output = output,
+      .error = error,
+      .env = env,
+  };
 
   init_logger(cli);
   print_version(cli.output);
