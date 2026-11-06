@@ -29,7 +29,7 @@ std::optional<std::string> try_normalize_powers(Processor& processor,
   std::string output;
   std::size_t pos = 0;
 
-  for (auto match : ctre::search_all<
+  for (auto const match : ctre::search_all<
            "(?:"
            // case 1: ^ 3 --> ^3
            R"(\^[ \t]+([0-9]+))"
@@ -154,7 +154,7 @@ void Processor::UpdateRawVariables(std::vector<std::string>&& new_variables) {
     new_raw_variables.push_back(variable.c_str());
   }
 
-  auto nvars = gsl::narrow<slong>(new_variables.size());
+  auto const nvars = gsl::narrow<slong>(new_variables.size());
 
   fmpz_mpoly_ctx_clear(context_);
   fmpz_mpoly_ctx_init(context_, nvars, ORD_DEGREVLEX);
@@ -168,14 +168,16 @@ void Processor::SetSubstitution(std::string_view name, std::string_view value) {
     throw std::runtime_error("variable name cannot be empty");
   }
 
-  Substitution item{.name = std::string{name},
-                    .value = "(" + std::string{value} + ")",
-                    .regex = std::regex("\\b" + std::string{name} + "\\b")};
+  Substitution item{
+      .name = std::string{name},
+      .value = "(" + std::string{value} + ")",
+      .regex = std::regex("\\b" + std::string{name} + "\\b"),
+  };
 
-  auto iter = std::ranges::find(substitutions_, name,
-                                [](const auto& substitution) -> const auto& {
-                                  return substitution.name;
-                                });
+  auto const iter = std::ranges::find(
+      substitutions_, name, [](const auto& substitution) -> const auto& {
+        return substitution.name;
+      });
 
   if (iter != substitutions_.end()) {
     *iter = std::move(item);
@@ -189,10 +191,10 @@ void Processor::ClearSubstitution(std::string_view name) {
     throw std::runtime_error("variable name cannot be empty");
   }
 
-  auto iter = std::ranges::find(substitutions_, name,
-                                [](const auto& substitution) -> const auto& {
-                                  return substitution.name;
-                                });
+  auto const iter = std::ranges::find(
+      substitutions_, name, [](const auto& substitution) -> const auto& {
+        return substitution.name;
+      });
 
   if (iter == substitutions_.end()) {
     throw std::runtime_error(
@@ -206,7 +208,8 @@ Processor::FlintString Processor::SimpleEvaluate(const char* expr) {
   fmpz_mpoly_q_t rat;
   fmpz_mpoly_q_init(rat, context_);
 
-  auto cleanup_q = gsl::finally([&] { fmpz_mpoly_q_clear(rat, context_); });
+  auto const cleanup_q =
+      gsl::finally([&] { fmpz_mpoly_q_clear(rat, context_); });
 
   const int res =
       fmpz_mpoly_q_set_str_pretty(rat, expr, raw_variables_.data(), context_);
@@ -228,11 +231,12 @@ Processor::FlintString Processor::Evaluate(const char* expr) {
   fmpz_mpoly_q_t rat;
   fmpz_mpoly_q_init(rat, context_);
 
-  auto cleanup_q = gsl::finally([&] { fmpz_mpoly_q_clear(rat, context_); });
+  auto const cleanup_q =
+      gsl::finally([&] { fmpz_mpoly_q_clear(rat, context_); });
 
   int res;  // NOLINT(cppcoreguidelines-init-variables)
 
-  auto second_try = [this, &rat](std::string_view input) {
+  auto const second_try = [this, &rat](std::string_view input) {
     auto normalized = try_normalize_powers(*this, input);
     if (!normalized) {
       return -1;

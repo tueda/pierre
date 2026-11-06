@@ -91,14 +91,14 @@ jobs:
         run: |
           wget -qO- https://apt.llvm.org/llvm-snapshot.gpg.key \
             | sudo gpg --dearmor -o /etc/apt/keyrings/apt.llvm.org.gpg
-          echo 'deb [signed-by=/etc/apt/keyrings/apt.llvm.org.gpg] http://apt.llvm.org/noble/ llvm-toolchain-noble-22 main' \
-            | sudo tee /etc/apt/sources.list.d/llvm-toolchain-noble-22.list
+          echo 'deb [signed-by=/etc/apt/keyrings/apt.llvm.org.gpg] http://apt.llvm.org/noble/ llvm-toolchain-noble-23 main' \
+            | sudo tee /etc/apt/sources.list.d/llvm-toolchain-noble-23.list
           sudo apt-get update
 
       - name: Install build dependencies
         uses: tueda/cache-apt-pkgs-action@v1
         with:
-          packages: autoconf-archive clang-tidy-22
+          packages: autoconf-archive clang-tidy-23
           version: ${{ matrix.os }}-1
 
       - name: Set up CMake
@@ -122,7 +122,7 @@ jobs:
         run: ./vcpkg/vcpkg install
 
       - name: Configure the build with CMake
-        run: cmake --preset clang-tidy -DCLANG_TIDY_BIN="$(command -v clang-tidy-22)"
+        run: cmake --preset clang-tidy -DCLANG_TIDY_BIN="$(command -v clang-tidy-23)"
 
       - name: Build with clang-tidy
         run: cmake --build build/clang-tidy --parallel
