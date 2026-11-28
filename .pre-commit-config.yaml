@@ -38,9 +38,9 @@ repos:
     rev: v0.6.13
     hooks:
       - id: cmake-format
-        additional_dependencies: [pyyaml==6.0.3]
+        additional_dependencies: [pyyaml==6.0.4]
       - id: cmake-lint
-        additional_dependencies: [pyyaml==6.0.3]
+        additional_dependencies: [pyyaml==6.0.4]
 
   - repo: https://github.com/biomejs/pre-commit
     rev: v2.6.7
